@@ -3,6 +3,9 @@ from itertools import permutations
 import folium
 import polyline
 import requests
+import os
+
+from dotenv import load_dotenv
 
 
 def get_coordinates(address, api_key):
@@ -94,7 +97,8 @@ def main():
     # Thông tin về các địa điểm và API key
     locations = ["Hoa Lien, Hoa Vang, Da Nang", "Hoa Khanh Bac, Lien Chieu Da Nang", "Ton Dan, Cam Le, Da Nang",
                  "Tam Ky, Quang Nam"]
-    api_key = "API_KEY"
+    load_dotenv()
+    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
     # Chuyển đổi địa chỉ thành tọa độ
     coords = [get_coordinates(location, api_key) for location in locations]
