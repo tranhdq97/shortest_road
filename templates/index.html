@@ -1,70 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Route Planner</title>
+    <title>Tính Đường Đi Ngắn Nhất</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMUly6piUEaFfM8mbd56k+O4nyUMG0VqazVrt3U" crossorigin="anonymous">
     <style>
-        #addressContainer {
-            margin-bottom: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        .address-input {
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+        }
+        label {
+            display: block;
             margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        input[type="text"], button, input[type="submit"] {
+            width: 100%;
+            padding: 25px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 24px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            form {
+                padding: 40px;
+            }
+            input[type="text"], button, input[type="submit"] {
+                padding: 30px;
+                font-size: 28px;
+            }
+            button {
+                padding: 30px;
+            }
+            input[type="submit"] {
+                padding: 30px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Route Planner</h1>
-    <div>
-        <label for="currentLocation">Current Location:</label>
-        <input type="text" id="currentLocation" placeholder="Enter current location" required>
-    </div>
-    <div id="addressContainer">
-        <label>Destinations:</label>
-        <div class="address-input">
-            <input type="text" class="destination" placeholder="Enter destination">
+    <form id="shortestRoadForm" method="post" action="{% url 'calculate_shortest_road' %}">
+        {% csrf_token %}
+        <h1>Tính Đường Đi Ngắn Nhất</h1>
+        <label for="current_location">Vị trí bắt đầu:</label>
+        <input type="text" name="current_location" id="current_location" required>
+        <label for="destinations">Vị trí kết thúc:</label>
+        <div id="destinationsContainer">
+            <input type="text" name="destinations" class="destination" required>
         </div>
-    </div>
-    <button onclick="addAddressInput()">Add Another Destination</button>
-    <button onclick="calculateRoute()">Calculate Route</button>
+        <button type="button" id="addDestinationBtn"><i class="fas fa-plus"></i> Thêm vị trí</button>
+        <input type="submit" value="Bắt đầu tính toán đường đi">
+    </form>
 
     <script>
-        function addAddressInput() {
-            const addressContainer = document.getElementById('addressContainer');
-            const inputDiv = document.createElement('div');
-            inputDiv.className = 'address-input';
-            inputDiv.innerHTML = '<input type="text" class="destination" placeholder="Enter destination">';
-            addressContainer.appendChild(inputDiv);
-        }
-
-        function calculateRoute() {
-            const currentLocation = document.getElementById('currentLocation').value;
-            const destinationInputs = document.querySelectorAll('.destination');
-            const destinations = Array.from(destinationInputs).map(input => input.value).filter(value => value);
-
-            if (!currentLocation) {
-                alert("Current location is required");
-                return;
-            }
-
-            if (destinations.length === 0) {
-                alert("At least one destination is required");
-                return;
-            }
-
-            fetch('/calculate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ current_location: currentLocation, destinations: destinations })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                // Handle the response data
-            })
-            .catch(error => console.error('Error:', error));
-        }
+        document.getElementById('addDestinationBtn').addEventListener('click', function() {
+            var container = document.getElementById('destinationsContainer');
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'destinations';
+            input.className = 'destination';
+            input.required = true;
+            container.appendChild(input);
+        });
     </script>
 </body>
 </html>

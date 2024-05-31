@@ -1,3 +1,4 @@
+asgiref==3.8.1
 blinker==1.8.2
 branca==0.7.2
 certifi==2024.2.2
@@ -7,9 +8,10 @@ click==8.1.7
 contourpy==1.2.1
 cycler==0.12.1
 distlib==0.3.8
+Django==4.0.6
+django-environ==0.11.2
 filelock==3.14.0
 flake8==7.0.0
-Flask==3.0.3
 folium==0.16.0
 fonttools==4.52.4
 gunicorn==22.0.0
@@ -36,6 +38,7 @@ python-dotenv==1.0.1
 PyYAML==6.0.1
 requests==2.32.3
 six==1.16.0
+sqlparse==0.5.0
 urllib3==2.2.1
 virtualenv==20.26.2
 Werkzeug==3.0.3

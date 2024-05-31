@@ -6,8 +6,7 @@ import folium
 import numpy as np
 import polyline
 import requests
-from dotenv import load_dotenv
-from matplotlib import colors as m_colors
+from shortest_road.settings import env, BASE_DIR
 
 
 class GoogleMapAPIException(Exception):
@@ -16,8 +15,7 @@ class GoogleMapAPIException(Exception):
 
 class ShortestRoadToMultiPoints:
     def __init__(self):
-        load_dotenv()
-        self._api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+        self._api_key = env.str("GOOGLE_MAPS_API_KEY")
         self._start_color = "green"
         self._end_color = "red"
 
@@ -73,17 +71,6 @@ class ShortestRoadToMultiPoints:
                 opacity=1,
             )
             m.add_child(points)
-            # angle = self._calculate_angle(start, end)
-            # folium.Marker(
-            #     location=start,
-            #     icon=folium.Icon(
-            #         icon="arrow-up",
-            #         prefix="fa",
-            #         angle=angle,
-            #         color="blue"
-            #     ),
-            #     popup=f"Direction: {angle:.2f}°"
-            # ).add_to(m)
 
         for idx, point in enumerate(path):
             folium.Marker(
@@ -102,9 +89,11 @@ class ShortestRoadToMultiPoints:
             popup="End",
             icon=folium.Icon(color="red"),
         ).add_to(m)
-        m.save("static/map.html")
+        m.save(f"{BASE_DIR}/templates/map.html")
 
     def _get_gradient_color(self, n_steps: int):
+        from matplotlib import colors as m_colors
+
         gradient = self._gradient_color(
             start_color=self._start_color, end_color=self._end_color, n_steps=n_steps
         )
@@ -126,6 +115,8 @@ class ShortestRoadToMultiPoints:
 
     @staticmethod
     def _gradient_color(start_color: str, end_color: str, n_steps: int):
+        from matplotlib import colors as m_colors
+
         start_rgb = m_colors.hex2color(start_color)
         end_rgb = m_colors.hex2color(end_color)
 
