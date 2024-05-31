@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Route Planner</title>
+    <style>
+        #addressContainer {
+            margin-bottom: 20px;
+        }
+        .address-input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Route Planner</h1>
+    <div>
+        <label for="currentLocation">Current Location:</label>
+        <input type="text" id="currentLocation" placeholder="Enter current location" required>
+    </div>
+    <div id="addressContainer">
+        <label>Destinations:</label>
+        <div class="address-input">
+            <input type="text" class="destination" placeholder="Enter destination">
+        </div>
+    </div>
+    <button onclick="addAddressInput()">Add Another Destination</button>
+    <button onclick="calculateRoute()">Calculate Route</button>
+
+    <script>
+        function addAddressInput() {
+            const addressContainer = document.getElementById('addressContainer');
+            const inputDiv = document.createElement('div');
+            inputDiv.className = 'address-input';
+            inputDiv.innerHTML = '<input type="text" class="destination" placeholder="Enter destination">';
+            addressContainer.appendChild(inputDiv);
+        }
+
+        function calculateRoute() {
+            const currentLocation = document.getElementById('currentLocation').value;
+            const destinationInputs = document.querySelectorAll('.destination');
+            const destinations = Array.from(destinationInputs).map(input => input.value).filter(value => value);
+
+            if (!currentLocation) {
+                alert("Current location is required");
+                return;
+            }
+
+            if (destinations.length === 0) {
+                alert("At least one destination is required");
+                return;
+            }
+
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ current_location: currentLocation, destinations: destinations })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Handle the response data
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
